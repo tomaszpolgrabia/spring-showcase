@@ -1,0 +1,4 @@
+allprojects {
+    group = 'ch.polgrabia'
+    version = '0.0.1-SNAPSHOT'
+}
