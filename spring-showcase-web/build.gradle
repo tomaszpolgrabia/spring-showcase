@@ -27,5 +27,4 @@ flyway {
     url = project.ext['springshowcase.flyway.url']
     user = project.ext['springshowcase.flyway.username']
     password = project.ext['springshowcase.flyway.password']
-    schemas = project.ext['springshowcase.flyway.schemas']
 }
