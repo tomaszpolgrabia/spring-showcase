@@ -3,8 +3,9 @@ package ch.polgrabia.springshowcaseweb.controllers;
 import ch.polgrabia.springshowcaseweb.models.User;
 import ch.polgrabia.springshowcaseweb.services.JpaUserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,19 +16,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@PropertySource("classpath:application.properties")
 @RequestMapping("/api/users")
 public class UserController {
 
-    public static final int PAGE_SIZE = 10;
     private final JpaUserDao jpaUserDao;
+    private final Integer pageSize;
 
-    public UserController(@Autowired JpaUserDao jpaUserDao) {
+    public UserController(
+            @Autowired JpaUserDao jpaUserDao,
+            @Value("${springshowcase.users.controller.page.size}") Integer pageSize) {
         this.jpaUserDao = jpaUserDao;
+        this.pageSize = pageSize;
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public List<User> handleGetAllUsers(@RequestParam(name = "page", defaultValue = "0", required = false) Integer page) {
-        return jpaUserDao.findAll(PageRequest.of(page, PAGE_SIZE))
+        return jpaUserDao.findAll(PageRequest.of(page, pageSize))
                 .get()
                 .collect(Collectors.toList());
     }
