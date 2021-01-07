@@ -1,5 +1,6 @@
 package ch.polgrabia.springshowcaseweb.controllers;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -29,8 +30,13 @@ public class KafkaController {
         kafkaTemplate.send(topic1, message);
     }
 
-    @KafkaListener(topics = "topic1", groupId = "group1")
-    public void handleMessage(String message) {
-        System.out.printf("Got message: %s", message);
+    @KafkaListener(topics = "topic1", groupId = "group1", containerFactory = "kafkaListenerStringContainerFactory")
+    public void handleMessage(ConsumerRecord<String, String> message) {
+        System.out.printf("Got message: %s\n", message.value());
+    }
+
+    @KafkaListener(topics = "counts-store-topic", groupId = "group1", containerFactory = "kafkaListenerLongContainerFactory")
+    public void handleCountsStore(ConsumerRecord<String, Long> message) {
+        System.out.printf("Got counts store message: %s - with value %d\n", message.key(), message.value());
     }
 }
