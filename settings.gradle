@@ -1,2 +1,3 @@
 rootProject.name = 'spring-showcase'
 include ':spring-showcase-web'
+include ':spring-websockets-demo1'
